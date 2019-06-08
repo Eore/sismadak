@@ -21,17 +21,19 @@ const (
 )
 
 func inisiasiRouter(con *sql.DB) *http.ServeMux {
+	log.Println("Inisiasi router...")
 	router := http.NewServeMux()
-	repoPokja := repositories.InisiasiRepoPokja(con)
-	handlerPokja := handlers.InisiasiPokjaHandler(repoPokja)
-	routes.RouterPokja(router, handlerPokja)
-
+	routes.RouterPokja(router, handlers.InisiasiHandlerPokja(repositories.InisiasiRepoPokja(con)))
+	routes.RouterKategori(router, handlers.InisiasiHandlerKategori(repositories.InisiasiRepoKategori(con)))
+	log.Println("Inisiasi router selesai")
 	return router
 }
 
 func inisiasiModel(con *sql.DB) {
 	log.Println("Inisiasi model...")
 	helpers.InisiasiModel(con, "pokja", models.Pokja{})
+	helpers.InisiasiModel(con, "dokumen", models.Dokumen{})
+	helpers.InisiasiModel(con, "kategori", models.Kategori{})
 	log.Println("Inisiasi model selesai")
 }
 
