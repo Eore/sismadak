@@ -15,6 +15,7 @@ func KoneksiDatabase(driver, host, port, database, user, pass string) *sql.DB {
 	con, err := sql.Open(driver, dbURL)
 	if err != nil {
 		log.Fatalln("Koneksi ke database gagal")
+		return nil
 	}
 	if _, err := con.Exec("SELECT 1+1"); err != nil {
 		con.Close()
@@ -24,12 +25,14 @@ func KoneksiDatabase(driver, host, port, database, user, pass string) *sql.DB {
 		createDB := fmt.Sprintf("CREATE DATABASE %s", database)
 		if _, err := conTemp.Query(createDB); err != nil {
 			fmt.Println("Gagal membuat database")
+			return nil
 		}
 		conTemp.Close()
 		dbURL = fmt.Sprintf("%s://%s:%s@%s:%s/%s?sslmode=disable", driver, user, pass, host, port, database)
 		conNew, err := sql.Open(driver, dbURL)
 		if err != nil {
 			log.Fatalln("Koneksi ke database gagal")
+			return nil
 		}
 		return conNew
 	}
